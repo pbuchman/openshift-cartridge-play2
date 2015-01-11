@@ -2,8 +2,6 @@
 
 function start {
     cd $OPENSHIFT_REPO_DIR
-    # build on first time
-    [ -d target ] || build
     rm -f target/universal/stage/RUNNING_PID
     BIN_NAME=$(ls target/universal/stage/bin/ | head -n 1)
     nohup target/universal/stage/bin/$BIN_NAME -Duser.home=${OPENSHIFT_DATA_DIR} -Dhttp.port=8080 -Dhttp.address=${OPENSHIFT_PLAY2_IP} -DapplyEvolutions.default=true -Dconfig.resource=openshift.conf -mem 512 > $OPENSHIFT_PLAY2_LOG_DIR/play.log 2>&1 &
@@ -16,18 +14,6 @@ function stop {
 function restart {
     stop
     start
-}
-
-function build {
-    # Workaround for failure in npm install when a package in package.json
-    # points to a git commit.
-    # This issue occurs because we are running in the context of a
-    # git post receive-hook
-    unset GIT_DIR
-    unset GIT_WORK_TREE
-
-    cd ${OPENSHIFT_REPO_DIR}
-    activator clean stage -Duser.home=${OPENSHIFT_DATA_DIR}
 }
 
 function tidy {
@@ -47,7 +33,7 @@ case "$1" in
   reload)      catchall ;;
   tidy)        tidy ;;
   pre-build)   catchall ;;
-  build)       build ;;
+  build)       catchall ;;
   deploy)      catchall ;;
   post-deploy) catchall ;;
   *)           exit 0
