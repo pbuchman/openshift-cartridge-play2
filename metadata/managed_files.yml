@@ -1,7 +1,5 @@
 ---
 locked_files:
-- bin/
-- bin/*
 - metadata/
 - metadata/*
 - env/
@@ -9,3 +7,6 @@ locked_files:
 - template/
 processed_templates:
 - '**/*.erb'
+setup_rewritten:
+- bin/
+- bin/*
